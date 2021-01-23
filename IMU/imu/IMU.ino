@@ -454,7 +454,7 @@ void gyro_calibration(void){
   mpu.setYGyroOffset(0);
   mpu.setZGyroOffset(0);
 
-  delay(3000);
+  my_delay(3000);
 
   while(1)
   {
@@ -583,7 +583,7 @@ void acc_calibration(void){
       if(row_accel[X]>2000 && ave_accel[X]== 0)
       {
         Serial.println("#Nose up");
-        delay(1000);wdt_reset();delay(1000);wdt_reset();delay(1000);wdt_reset();
+        my_delay(3000);
         for(i=0;i<5000 ; i++)
         {
           wdt_reset();
@@ -597,7 +597,7 @@ void acc_calibration(void){
       }else if(row_accel[Y]>2000 && ave_accel[Y] == 0)
       {
         Serial.println("#Side R");
-        delay(1000);wdt_reset();delay(1000);wdt_reset();delay(1000);wdt_reset();
+        my_delay(3000);
         for(i=0;i<5000 ; i++)
         {
           wdt_reset();
@@ -611,7 +611,7 @@ void acc_calibration(void){
       }else if(row_accel[Z]>2000 && ave_accel[Z] == 0)
       {
         Serial.println("#level");
-        delay(1000);wdt_reset();delay(1000);wdt_reset();delay(1000);wdt_reset();
+        my_delay(3000);
         for(i=0;i<5000 ; i++)
         {
           wdt_reset();
@@ -660,7 +660,6 @@ Serial.print(" offsetZ: ");Serial.println(offset_acc[Z]);
 
 void acc_set_offset(void)
 {
-
   Serial.print("Set acc offset:");
   Serial.print(" offsetX: ");Serial.print(offset_acc[X]);
   Serial.print(" offsetY: ");Serial.print(offset_acc[Y]);
@@ -695,7 +694,7 @@ void compass_calibration(void)
   int16_t maxZ=0,minZ=0,aveZ=0;
        //calibration
   while(1){
-    wdt_reset();
+   wdt_reset();
    compass.getHeading(&mag[X], &mag[Y], &mag[Z]);
    if(mag[X]>maxX)maxX=mag[X];
    if(mag[X]<minX)minX=mag[X];
@@ -788,4 +787,17 @@ void compass_set_offset(void)
   EEPROM.write(4,(uint8_t)(offset_mag[Z]>>8));  delay(5);//H
   EEPROM.write(5,(uint8_t)(offset_mag[Z]&0XFF));delay(5);//L
   return ;
+}
+
+
+void my_delay(uint16_t time)
+{
+  uint16_t i = 0;
+  time = time/100;
+  for(i=0 ; i<time ; i++)
+  {
+    wdt_reset();
+    delay(100);
+  }
+  return;
 }
